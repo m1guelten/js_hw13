@@ -1,147 +1,164 @@
-console.log('Sample JavaScript #3 HW #15');
+console.log('Sample JavaScript #4 HW #16');
 
 //#1
-counter = (function () {
-  var count = 0;
-  return function (num) {
-    count = num === undefined ? count : num;
-    return count++;
-  };
-})();
-console.log(counter());
-console.log(counter());
-console.log(counter(100));
-console.log(counter());
-console.log(counter());
-console.log(counter(500));
-console.log(counter());
-console.log(counter());
-console.log(counter(0));
-console.log(counter());
-console.log(counter());
+
+let myLongStr =
+  'bhjdsbbcjkdfnvj vhdjvhi dcdsjvhre vhdvjdsi gui xfcghj hgvyhy/cdg gf=dvfkvo-0fvfmidf[lfdfkbk-flbpcvm  l;v lfvk dfk d df v[df[viodflv-';
+let wordsList = (str, subStr) => {
+  let reg = new RegExp('\\.|,|\\?|!|:|;|"', 'gui');
+  let arr = str
+    .replace(reg, '')
+    .toLowerCase()
+    .split(' ')
+    .filter((arrItem) => arrItem.indexOf(subStr) > -1);
+  let res = new Set();
+
+  arr.forEach((arrItem) => {
+    res.add(arrItem);
+  });
+
+  return res;
+};
 
 // #2
-var counting = (function () {
-  var count = 0;
-  return {
-    value(num) {
-      if (num !== undefined) count = num;
-      return count;
-    },
-    decrement() {
-      count--;
-    },
-    increment() {
-      count++;
-    },
-  };
-})();
-console.log(counting.value());
-counting.increment();
-counting.increment();
-counting.increment();
-console.log(counting.value());
-counting.decrement();
-counting.decrement();
-console.log(counting.value());
-console.log(counting.value(100));
-counting.decrement();
-console.log(counting.value());
-console.log(counting.value(200));
-counting.increment();
-console.log(counting.value());
+/*
+ * Создайте функцию getLocalDate(date, isSeconds, isISO), которая будет принимать любую
+ * дату от конструктора new Date и преобразовывать ее в следующие форматы в зависимости от параметров:
+ * getLocalDate(date)              → dd.mm.yyyy, hh:mm,    например: 16.07.2019, 00:15
+ * getLocalDate(date, true)        → dd.mm.yyyy, hh:mm:ss, например: 16.07.2019, 00:15:32
+ * getLocalDate(date, false, true) → yyyy-mm-dd, hh:mm,    например: 2019-06-02, 00:15
+ * getLocalDate(date, true, true)  → yyyy-mm-dd, hh:mm:ss, например: 2019-06-02, 00:15:32
+ * date – любая дата из конструктора new Date().
+ * isSeconds – опциональный параметр для отображения секунд в дате.
+ * isISO – опциональный параметр переключения формата даты.
+ */
 
-//#3
-let myPrint = (a, b, res) => `${a}^${b}=${res}`;
-let myPow = (a, b, callback) => {
-  let pow = (x, n) => {
-    if (n !== 1) return (x *= pow(x, n - 1));
-    return x;
-  };
-  return callback(a, b, pow(a, b));
+let myDate = new Date();
+let getLocalDate = (date, isSeconds = false, isISO = false) => {
+  const reg = new RegExp(':\\d{2}$', 'gui');
+  let res;
+  if (!isISO) {
+    res = isSeconds
+      ? date.toLocaleString()
+      : date.toLocaleString().replace(reg, '');
+  } else {
+    const year = date.getFullYear();
+    const month =
+      date.getMonth() + 1 < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    const day = date.getDate() < 9 ? `0${date.getDate()}` : date.getDate();
+    const hour = date.getHours() < 9 ? `0${date.getHours()}` : date.getHours();
+    const minutes =
+      date.getMinutes() < 9 ? `0${date.getMinutes()}` : date.getMinutes();
+    const seconds =
+      date.getSeconds() < 9 ? `0${date.getSeconds()}` : date.getSeconds();
+    res = isSeconds
+      ? `${year}-${month}-${day}, ${hour}:${minutes}:${seconds}`
+      : `${year}-${month}-${day}, ${hour}:${minutes}`;
+  }
+  return res;
 };
-console.log(myPow(3, 4, myPrint));
-console.log(myPow(2, 3, myPrint));
 
-//#4-6
-function fullInfo() {
+/*
+ * #3
+ *
+ * Создайте функцию getWeekDay(date), которая принимает дату в виде строки в формате 'yyyy-mm-dd'
+ * и выводит текущий день недели: "понедельник", "вторник", … "воскресенье".
+ */
+
+let getWeekDay = (d) => {
+  const date = new Date(d);
+  const days = [
+    'понеділок',
+    'вівторок',
+    'середа',
+    'четвер',
+    'пятниця',
+    'субота',
+    'неділя',
+  ];
+  return days[date.getDay()];
+};
+
+/* #4
+ * Напишите функцию, getLocalDay(date) которая возвращает день недели для даты date.
+ * День нужно возвратить в европейской нумерации, т.е. понедельник имеет номер 1, вторник номер 2, …, воскресенье – номер 7.
+ */
+
+let getLocalDay = (d) => {
+  const date = new Date(d);
+  let day = date.getDay();
+  if (day === 0) day = 7;
+  return day;
+};
+
+/* #5
+ *
+ * Создайте функцию getDateAgo(date, days), которая возвращает дату,
+ * которая была days дней назад от указанной даты date.
+ * Дата принимается в формате YYYY-MM-DD, возвращается DD.MM.YYYY.
+ */
+let getDateAgo = (d, days) => {
+  const date = new Date(d);
+  date.setDate(date.getDate() - days);
+  return date.toLocaleString().replace(/(\d.*),\s+(\d.*)/gu, '$1');
+};
+
+/*#6
+ * Используя в качестве основы, объект car, описанный в прошлом занятии, создайте прототип Car,
+ * реализующий те же поля (#17.4) и методы(#17.5 и #17.6) у создаваемых объектов.
+ *
+ * Например:
+ * let car = new Car(2000, 'Lacetti', 'Chevrolet', 2010);
+ * let car2 = new Car(5000, 'FX50 AWD', 'Infinite', 2019);
+ *
+ * Способ создания прототипа – только функция-конструктор!
+ * Объекты и их методы, созданные прототипом должны полностью соответствовать объектам из прошлого задания.
+ */
+let Car = function (engine, model, name, year) {
+  this.engine = engine;
+  this.model = model;
+  this.name = name;
+  this.year = year;
+};
+Object.defineProperties(Car.prototype, {
+  used: {
+    get() {
+      const yearNow = new Date().getFullYear();
+      return yearNow - this.year > 1 ? 'used' : 'new';
+    },
+    set(value) {
+      const yearNow = new Date().getFullYear();
+      if (value === 'new' && this.year < yearNow) this.year = yearNow;
+    },
+  },
+});
+Car.prototype.info = function () {
   return `${this.name} ${this.model}, ${this.engine}cc, year ${this.year}, ${this.used}`;
+};
+let car = new Car(2000, 'Lacetti', 'Chevrolet', 2010);
+let car2 = new Car(5000, 'FX50 AWD', 'Infinite', 2019);
+
+/* #7
+ * Напишите функцию testPerformance(iterations, func) для тестирования производительности любых, переданных ей в качестве параметра функций.
+ * iterations – количество повторений для тестирования.
+ * func – тестируемая функция.
+ *
+ * Если в качестве параметра передается что-либо кроме функции, тестирование не выполняется, возвращается 0.
+ */
+let testPerformance = (iterations, func) => {
+  let time = Date.now();
+  if (typeof func === 'function') for (let i = iterations; i--; ) func();
+  return Date.now() - time;
+};
+function test1() {
+  let str = myLongStr;
+  while (str.indexOf('o') !== -1) str = str.replace('o', '');
+  while (str.indexOf('a') !== -1) str = str.replace('a', '');
+  while (str.indexOf('e') !== -1) str = str.replace('e', '');
+  while (str.indexOf('u') !== -1) str = str.replace('u', '');
+  while (str.indexOf('i') !== -1) str = str.replace('i', '');
 }
-var yearNow = new Date().getFullYear();
-var car = {
-  engine: 2000,
-  model: 'Lacetti',
-  name: 'Chevrolet',
-  year: 2010,
-  info: fullInfo,
-  get used() {
-    return this.year !== yearNow ? 'used' : 'new';
-  },
-  set used(value) {
-    if (value === 'new' && this.year < yearNow) this.year = yearNow;
-  },
-};
-var car2 = {
-  engine: 5000,
-  model: 'FX50 AWD',
-  name: 'Infinite',
-  year: 2019,
-  info: fullInfo,
-  get used() {
-    return yearNow - this.year ? 'used' : 'new';
-  },
-  set used(value) {
-    if (value === 'new' && this.year < yearNow) this.year = yearNow;
-  },
-};
-console.log(car.info());
-car.used = 'new';
-console.log(car.info());
-car.used = 'used';
-console.log(car.info());
-console.log(car2.info());
-car.used = 'used';
-console.log(car2.info());
-
-//#7
-var list = [12, 23, 100, 34, 56, 9, 233];
-var myMax = (arg) => Math.max.apply(Math, arg);
-console.log(myMax(list));
-
-//#8
-function myMul(a, b) {
-  return a * b;
+function test2() {
+  const reg = new RegExp('[oaeui]', 'gui');
+  myLongStr.replace(reg, '');
 }
-var myDouble = myMul.bind(null, 2);
-console.log(myDouble(3));
-console.log(myDouble(4));
-console.log(myDouble(5));
-var myTriple = myMul.bind(null, 3);
-console.log(myTriple(3));
-console.log(myTriple(4));
-console.log(myTriple(5));
-
-//#9
-//#9
-var notUniqNums = [1, 1, 2, 3, 4, 5, 6, 7];
-var notUniqStrings = [
-  'Bob',
-  'Kate',
-  'Jhon',
-  'Tom',
-  'Jhon',
-  'Kate',
-  'Tom',
-  'Bob',
-  'Jhon',
-  'Tom',
-];
-var myUniq = (arr) => {
-  var set = new Set();
-  arr.forEach((val) => {
-    set.add(val);
-  });
-  return set;
-};
-console.log(myUniq(notUniqNums));
-console.log(myUniq(notUniqStrings));
